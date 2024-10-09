@@ -1,11 +1,11 @@
 import os
 from opensearchpy import OpenSearch, ConnectionError
 
-# Get OpenSearch connection details from environment variables or use defaults
+
 OPENSEARCH_HOST = os.environ.get('OPENSEARCH_HOST', 'localhost')
 OPENSEARCH_PORT = int(os.environ.get('OPENSEARCH_PORT', 9200))
 
-# Connect to OpenSearch
+
 client = OpenSearch(
     hosts=[{'host': OPENSEARCH_HOST, 'port': OPENSEARCH_PORT}],
     http_compress=True,  # enables gzip compression for request bodies
@@ -16,7 +16,7 @@ client = OpenSearch(
     ssl_show_warn=False,  # for testing only. Use True in production
 )
 
-# Define index mappings
+
 index_body = {
     "settings": {
         "index": {
@@ -38,7 +38,6 @@ index_body = {
     }
 }
 
-# Create the 'recipes' index
 try:
     response = client.indices.create(index="recipes", body=index_body)
     print("Index 'recipes' created successfully:", response)
@@ -48,7 +47,3 @@ except ConnectionError as e:
 except Exception as e:
     print("Error creating index:", str(e))
 
-# Optionally, you can add the bulk import here
-# Uncomment the following lines if you want to perform bulk import
-# with open('bulk_recipes.json', 'rb') as f:
-#     client.bulk(body=f.read())
